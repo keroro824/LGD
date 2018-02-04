@@ -1,0 +1,28 @@
+gradient 0.999999
+gradient 1
+gradient 1
+gradient 1
+gradient 1
+gradient 1
+gradient 1
+gradient 1.00002 true gradient norm 127393 std127395
+gradient 1.00002 true gradient norm 38168.8 std38169.6
+gradient 1.00002 true gradient norm 27632.9 std27633.5
+gradient 1.00002 true gradient norm 18756.5 std18756.9
+gradient 1.00002 true gradient norm 13719.9 std13720.2
+gradient 1.00002 true gradient norm 9958.3 std9958.52
+gradient 1.00002 true gradient norm 8169.91 std8170.1
+gradient 1.00002 true gradient norm 6438.71 std6438.86
+gradient 1.00002 true gradient norm 5511.73 std5511.87
+gradient 1.00002 true gradient norm 4730.18 std4730.3
+gradient 1.00003 true gradient norm 4317.27 std4317.38
+gradient 1.00003 true gradient norm 3924.12 std3924.22
+gradient 1.00003 true gradient norm 3629.5 std3629.59
+gradient 1.00003 true gradient norm 3352.96 std3353.05
+gradient 1.00003 true gradient norm 3153.33 std3153.41
+gradient 2.50635e-06 true gradient norm 127415 std0.319347
+gradient 4.41034e-06 true gradient norm 38819.5 std0.171207
+gradient 5.62355e-06 true gradient norm 27805.8 std0.156368
+gradient 7.70462e-06 true gradient norm 19184.9 std0.147812
+gradient 9.92781e-06 true gradient norm 14332.1 std0.142286
+gradient 1.24272e-05 true gradient norm 11097.7 std0.137914

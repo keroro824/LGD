@@ -1,0 +1,6 @@
+/data/*
+/test/*
+*.txt
+*.csv
+a.out
+.DS_store
