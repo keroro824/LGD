@@ -86,7 +86,7 @@ Sgd::Sgd(LSH *Algo, double** train_data, double** table_data, double** train_lab
     }
 
     std::default_random_engine generator;
-    std::normal_distribution<double> distribution(0.0,0.0001);
+    std::normal_distribution<double> distribution(0.0,0.000001);
 	for(int i=0; i< dim;i++)
 	{
         double number = distribution(generator);
@@ -389,9 +389,9 @@ int Sgd::LSDUpdate(int ada)
 	    for (int i = 0; i < _trainNum; i++) {
 
 
-	    	// if ((cur_iter%2==0) & (i==10)){
-	    	// 	freeze(srp, cur_iter, i);
-	    	// }
+	    	if ((cur_iter%5==0) & (i==10)){
+	    		freeze(srp, cur_iter, i);
+	    	}
 
 	    	//query data out
 			int* sample = _Algo->sample(_wv, srp, 1);
