@@ -262,7 +262,7 @@ void LshSgd(int argc,char *arg[])
 	else if (type==1){
 
 
-		for (K=1; K++;K<8){
+		for (K=1;K<8; K++){
 
 		LSH::_rangePow = K;
 		if (LSH::_rangePow >= 32)
@@ -285,7 +285,7 @@ void LshSgd(int argc,char *arg[])
 
 
 		
-		for (K=4; K++;K<4){
+		for (K=4; K<5; K++){
 		LSH::_rangePow = K;
 		if (LSH::_rangePow >= 32)
 			cout << "Range of Hash Values Too Big" << endl;
