@@ -17,9 +17,9 @@ def plot(inputfile1, inputfile2, train=True):
 
 	dic = set(data[:, 0])
 
-	for i in range(len(dic)-3):
+	for i in range(0, len(dic)):
 		cur = list(dic)[i]
-		iters1 = data[data[:, 0]==cur,1]
+		iters1 = data[data[:, 0]==cur,2]
 		train_error = data[data[:, 0]==cur,3]
 		test_error = data[data[:, 0]==cur,4]
 		if train:
@@ -28,7 +28,7 @@ def plot(inputfile1, inputfile2, train=True):
 			plt.plot(iters1, test_error, label='LSD K='+ str(cur)+ 'testing error')
 
 
-	iters2 = data2[:,1]
+	iters2 = data2[:,2]
 	train_error2 = data2[:,3]
 	test_error2 = data2[:,4]
 
@@ -39,10 +39,10 @@ def plot(inputfile1, inputfile2, train=True):
 	# plt.yscale('symlog')
 	legend = plt.legend(loc='upper right', shadow=True)
 	# plt.ylim(0, 10e2)
-	# plt.xlim(0, 10)
+	# plt.xlim(0, 33
 	plt.ylabel('error')
 	plt.xlabel('time (ms)')
 	# plt.xlabel('epoch')
 	plt.show()
 
-plot("UJI_sgd", "UJI_lsd",True)
+plot("slice_lsd", "slice_sgd",True)
