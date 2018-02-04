@@ -137,6 +137,7 @@ int * LSH::sample(int *hashes)
 		// int table = _v[i];
 		int table = rand()%_L;
 		unsigned int index = 0;
+		#pragma omp parallel for
 		for (int j = 0; j < _K; j++)
 		{
 			unsigned int h = hashes[_K*table + j];

@@ -44,7 +44,7 @@ int *SignedRandomProjection::getHash(double *vector, int length) {
     // length should be = to _dim
     int *hashes = new int[_numhashes];
 
-// #pragma omp parallel for
+ // #pragma omp parallel for
     for (int i = 0; i < _numhashes; i++) {
         double s = 0;
         for (size_t j = 0; j < _samSize; j++) {
@@ -66,7 +66,7 @@ int *SignedRandomProjection::getHash(double *vector, int length) {
 int *SignedRandomProjection::getHashForTables(double *vector, int K, int tableid, int p_or_n) {
     // length should be = to _dim
     int *hashes = new int[K];
-
+// #pragma omp parallel for
     for (int i = tableid*K; i < (tableid+1)*K; i++) {
         double s = 0;
         for (size_t j = 0; j < _samSize; j++) {

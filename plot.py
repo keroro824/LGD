@@ -39,10 +39,10 @@ def plot(inputfile1, inputfile2, train=True):
 	# plt.yscale('symlog')
 	legend = plt.legend(loc='upper right', shadow=True)
 	# plt.ylim(0, 10e2)
-	# plt.xlim(0, 33
+	plt.xlim(0, 20000)
 	plt.ylabel('error')
 	plt.xlabel('time (ms)')
 	# plt.xlabel('epoch')
 	plt.show()
 
-plot("slice_lsd", "slice_sgd",True)
+plot("slice_lsd_ada", "slice_sgd_ada",True)
