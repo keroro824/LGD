@@ -17,7 +17,7 @@ def plot(inputfile1, inputfile2, train=True):
 
 	dic = set(data[:, 0])
 
-	for i in range(0, len(dic)-5):
+	for i in range(0, len(dic)-2):
 		cur = list(dic)[i]
 		iters1 = data[data[:, 0]==cur,2]
 		train_error = data[data[:, 0]==cur,3]
@@ -39,10 +39,10 @@ def plot(inputfile1, inputfile2, train=True):
 	# plt.yscale('symlog')
 	legend = plt.legend(loc='upper right', shadow=True)
 	# plt.ylim(0, 10e2)
-	# plt.xlim(0, 20000)
+	plt.xlim(0, 20000)
 	plt.ylabel('error')
 	plt.xlabel('time (ms)')
 	# plt.xlabel('epoch')
 	plt.show()
 
-plot("blog_lsd", "blog_sgd",True)
+plot("UJI_lsd_ada", "UJI_sgd_ada",True)
