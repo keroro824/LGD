@@ -17,11 +17,11 @@ def plot(inputfile1):
 	epoch = set(data[:, 3])
 
 
-	for i in range(0, 1):
+	for i in range(0, len(dic)):
 		cur = list(dic)[i]
 
 		iters1 = data[data[:, 0]==cur,:]
-		iters1 = iters1[iters1[:, 1]==0,:]
+		# iters1 = iters1[iters1[:, 1]==0,:]
 		lsderror = []
 		sgderror = []
 		avg_grad_norm = []

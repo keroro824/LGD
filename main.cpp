@@ -262,7 +262,7 @@ void LshSgd(int argc,char *arg[])
 	else if (type==1){
 
 
-		for (K=1;K<10; K++){
+		// for (K=1;K<10; K++){
 
 		LSH::_rangePow = K;
 		if (LSH::_rangePow >= 32)
@@ -278,7 +278,8 @@ void LshSgd(int argc,char *arg[])
 
 	    Sgd *_sgd = new Sgd(_Algo, train_data, table_data, train_label, test_data, test_label, trainNum, testNum, width, conv, lr, epoch, decayrate,reg, minibatch, srpratio, K, L, outputFile);
 		_sgd->LSDUpdate(adagrad);
-	}
+
+	// }
 	}
 
 	else if (type==2){
