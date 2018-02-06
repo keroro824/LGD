@@ -269,7 +269,7 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
         normwv+=_wv[m]*_wv[m];
     }
 
-    for (int batch=0; batch< 50; batch++){
+    for (int batch=0; batch< 200; batch++){
 
         double avg_lsd = 0.0;
         double avg_sgd = 0.0;
@@ -394,9 +394,11 @@ int Sgd::LSDUpdate(int ada)
 	    for (int i = 0; i < _trainNum; i++) {
 
 
-	    	if ((cur_iter%5==0) & (i%(_trainNum/4)==0)){
+	    	// if ((cur_iter%5==0) & (i%(_trainNum/4)==0)){
+	    	if ((cur_iter==10) & (i==_trainNum/2)){
 	    		freeze(srp, cur_iter, i);
 	    	}
+	    	
 
 	    	//query data out
 			int* sample = _Algo->sample(_wv, srp, 1);

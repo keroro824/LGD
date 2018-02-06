@@ -49,7 +49,7 @@ def plot(inputfile1):
 		plt.plot(list(epoch), lsderror, linestyle=":", color=color[i], label='LSD K='+ str(cur))
 		plt.plot(list(epoch), sgderror, color=color[i],label='SGD K='+ str(cur))
 
-	# plt.yscale('log')
+	plt.yscale('log')
 	legend = plt.legend(loc='upper right', shadow=True)
 	# plt.ylim(0, 10e2)
 	# plt.xlim(0, 10000)
@@ -60,7 +60,7 @@ def plot(inputfile1):
 
 # plot("blog_estimate")
 # plot("slice_estimation")
-plot("gradient")
+plot("test_error")
 # a = np.array((np.zeros(5),np.zeros(5)))
 # b = np.array((np.ones(5), np.ones(5), np.ones(5)))
 # print a
