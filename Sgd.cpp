@@ -278,11 +278,11 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
 
         // cout<<" truegrad "<<endl;
 
-        int** sample_batch = new int *[3];
-        for( int bit = 0; bit < 3; bit++ ) {
-            sample_batch[bit] = new int[sizz*(batch+1)];
-        }
-        _Algo->sampleBatch(_wv, srp,  sizz*(batch+1), sample_batch, 1);
+        // int** sample_batch = new int *[3];
+        // for( int bit = 0; bit < 3; bit++ ) {
+        //     sample_batch[bit] = new int[sizz*(batch+1)];
+        // }
+        // _Algo->sampleBatch(_wv, srp,  sizz*(batch+1), sample_batch, 1);
 
         double sgd_error = 0.0;
         double lsd_error = 0.0;
@@ -290,8 +290,8 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
         // cout<<"batch "<< batch<<endl;
 
         for (int sam =0; sam< sizz*(batch+1); sam++){
-            // int* sample_batch;
-            // sample_batch = _Algo->sample(_wv, srp,1);
+            int* sample_batch;
+            sample_batch = _Algo->sample(_wv, srp,1);
 
             double lsd_norm =0;
             double sgd_norm =0;
