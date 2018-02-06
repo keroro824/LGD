@@ -296,13 +296,13 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
             double lsd_norm =0;
             double sgd_norm =0;
 
-            int samid = sample_batch[0][sam];
-            int samset = sample_batch[1][sam];
-            int samtable = sample_batch[2][sam];
+            // int samid = sample_batch[0][sam];
+            // int samset = sample_batch[1][sam];
+            // int samtable = sample_batch[2][sam];
 
-            // int samid = sample_batch[0];
-            // int samset = sample_batch[1];
-            // int samtable = sample_batch[2];
+            int samid = sample_batch[0];
+            int samset = sample_batch[1];
+            int samtable = sample_batch[2];
 
 
             // cout<< "sample id: " <<samid <<"samset: "<< samset<< "samtable: "<<samtable<<endl;
@@ -351,10 +351,10 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
 
         }
                 
-                for (int f=0; f<_dim; f++){
-                    lsd_error += pow(truegrad[f]/_trainNum -lsd_grad[f]/(sizz*(batch+1)) , 2);
-                    sgd_error += pow(truegrad[f]/_trainNum -sgd_grad[f]/(sizz*(batch+1)) , 2);
-                }
+            for (int f=0; f<_dim; f++){
+                lsd_error += pow(truegrad[f]/_trainNum -lsd_grad[f]/(sizz*(batch+1)) , 2);
+                sgd_error += pow(truegrad[f]/_trainNum -sgd_grad[f]/(sizz*(batch+1)) , 2);
+            }
        
         myfile<< _K<< " "<< iter <<" "<< train<< " "<< batch << " "<< lsd_error << " "<< sgd_error <<" "<< avg_lsd/(sizz*(batch+1))<< " "<<avg_sgd/(sizz*(batch+1)) <<endl;
 
