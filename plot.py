@@ -17,7 +17,7 @@ def plot(inputfile1, inputfile2, train=True):
 
 	dic = set(data[:, 0])
 
-	for i in range(0, len(dic)):
+	for i in range(0, len(dic)-2):
 		cur = list(dic)[i]
 		iters1 = data[data[:, 0]==cur,2]
 		train_error = data[data[:, 0]==cur,3]
@@ -45,4 +45,4 @@ def plot(inputfile1, inputfile2, train=True):
 	# plt.xlabel('epoch')
 	plt.show()
 
-plot("slice_lsd_ada", "slice_sgd_ada",True)
+plot("UJI_lsd_ada", "UJI_sgd_ada",True)

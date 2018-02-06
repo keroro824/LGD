@@ -86,7 +86,7 @@ Sgd::Sgd(LSH *Algo, double** train_data, double** table_data, double** train_lab
     }
 
     std::default_random_engine generator;
-    std::normal_distribution<double> distribution(0.0,0.0001);
+    std::normal_distribution<double> distribution(0.0,0.000001);
 	for(int i=0; i< dim;i++)
 	{
         double number = distribution(generator);
@@ -228,12 +228,12 @@ int Sgd::SGDUpdate(int ada)
 }
 
 void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
-	ofstream myfile("log",  ios::out | ios::app);
+	ofstream myfile("gradient_log",  ios::out | ios::app);
     double* truegrad = new double[_dim];
     double* sgd_grad = new double[_dim];
     double* lsd_grad = new double[_dim];
     double* grad = new double[_trainNum];
-    double sizz = 5;
+    int sizz = 5;
 
 	//first compute true sgd
     double avg_true = 0.0;
@@ -252,16 +252,16 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
         }
         grad[n] = cur_norm;
     }
-    for (int f=0; f<_dim; f++){
-        true_gradient_norm+= truegrad[f]*truegrad[f];
-    }
+    // for (int f=0; f<_dim; f++){
+    //     true_gradient_norm+= truegrad[f]*truegrad[f];
+    // }
 
-    double variance = 0.0;
-    for (int n=0; n<_trainNum; n++){
-    	variance+= pow(grad[n]-true_gradient_norm/(_trainNum*_trainNum), 2);
-    }
-    variance = sqrt(variance/(_trainNum-1));
-    myfile<< "gradient "<< variance/true_gradient_norm << " true gradient norm "<< true_gradient_norm << " std" <<variance <<endl; 
+    // double variance = 0.0;
+    // for (int n=0; n<_trainNum; n++){
+    // 	variance+= pow(grad[n]-true_gradient_norm/(_trainNum*_trainNum), 2);
+    // }
+    // variance = sqrt(variance/(_trainNum-1));
+    // myfile<< "gradient "<< variance/true_gradient_norm << " true gradient norm "<< true_gradient_norm << " std" <<variance <<endl; 
 
     double normwv =0.0;
     for (int m=0; m<_dim+1; m++)
@@ -269,91 +269,94 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
         normwv+=_wv[m]*_wv[m];
     }
 
-    // for (int batch=0; batch< 200; batch++){
+    for (int batch=0; batch< 50; batch++){
 
-    //     double avg_lsd = 0.0;
-    //     double avg_sgd = 0.0;
+        double avg_lsd = 0.0;
+        double avg_sgd = 0.0;
 
-    //     // cout<<" truegrad "<<endl;
+        // cout<<" truegrad "<<endl;
 
-    //     // int** sample_batch = new int *[3];
-    //     // for( int bit = 0; bit < 3; bit++ ) {
-    //     //     sample_batch[bit] = new int[sizz*(batch+1)];
-    //     // }
-    //     // _Algo->sampleBatch(_wv, srp,  sizz*(batch+1), sample_batch, p_or_n);
+        int** sample_batch = new int *[3];
+        for( int bit = 0; bit < 3; bit++ ) {
+            sample_batch[bit] = new int[sizz*(batch+1)];
+        }
+        _Algo->sampleBatch(_wv, srp,  sizz*(batch+1), sample_batch, 1);
 
-    //     double sgd_error = 0.0;
-    //     double lsd_error = 0.0;
+        double sgd_error = 0.0;
+        double lsd_error = 0.0;
 
-    //     // cout<<"batch "<< batch<<endl;
+        // cout<<"batch "<< batch<<endl;
 
-    //     for (int sam =0; sam< sizz*(batch+1); sam++){
-    //         int* sample_batch;
-    //         sample_batch = _Algo->sample(_wv, srp,1);
+        for (int sam =0; sam< sizz*(batch+1); sam++){
+            // int* sample_batch;
+            // sample_batch = _Algo->sample(_wv, srp,1);
 
-    //         double lsd_norm =0;
-    //         double sgd_norm =0;
+            double lsd_norm =0;
+            double sgd_norm =0;
 
-    //         // int samid = sample_batch[0][sam];
-    //         // int samset = sample_batch[1][sam];
-    //         // int samtable = sample_batch[2][sam];
+            int samid = sample_batch[0][sam];
+            int samset = sample_batch[1][sam];
+            int samtable = sample_batch[2][sam];
 
-    //         int samid = sample_batch[0];
-    //         int samset = sample_batch[1];
-    //         int samtable = sample_batch[2];
-
-
-    //         // cout<< "sample id: " <<samid <<"samset: "<< samset<< "samtable: "<<samtable<<endl;
-
-    //         double* td = _train_data[samid];
-    //         double cur_label = _train_label[samid][0];
-    //         double thetax = dotproduct(td, _wv,0 , _dim)-cur_label;
-
-    //         double cp_comp = dotproduct(_table_data[samid], _wv, 0, _dim) - _table_data[samid][_dim];
+            // int samid = sample_batch[0];
+            // int samset = sample_batch[1];
+            // int samtable = sample_batch[2];
 
 
-    //         double cp = 1- acos(cp_comp/sqrt(normwv))/3.141592653;
-    //         double prob = (1 - pow((1 - pow(cp, _K)),samtable))*(1.0/samset);
-    //         // prob = 1.0/_trainNum;
+            // cout<< "sample id: " <<samid <<"samset: "<< samset<< "samtable: "<<samtable<<endl;
 
-    //         //first compute lsd
+            double* td = _train_data[samid];
+            double cur_label = _train_label[samid][0];
+            double thetax = dotproduct(td, _wv,0 , _dim)-cur_label;
 
-    //         for (int f=0; f<_dim; f++){
+            double cp_comp = dotproduct(_table_data[samid], _wv, 0, _dim) - _table_data[samid][_dim];
+
+
+            double cp = 1- acos(cp_comp/sqrt(normwv))/3.141592653;
+            double prob = (1 - pow((1 - pow(cp, _K)),samtable))*(1.0/samset);
+            // prob = 1.0/_trainNum;
+
+            //first compute lsd
+
+            for (int f=0; f<_dim; f++){
             	
-    //         	double gradient = thetax*td[f];
-    //             lsd_error += pow(truegrad[f]/_trainNum - gradient/_trainNum/prob, 2);
-    //             // cout<< "True: "<< truegrad[f]/_trainNum <<" estimated lsd: "<<_gradient[f]<<endl;
-    //             lsd_norm += pow(gradient, 2);
-    //         }
+            	double gradient = thetax*td[f];
+                // lsd_error += pow(truegrad[f]/_trainNum - gradient/_trainNum/prob, 2);
+                // cout<< "True: "<< truegrad[f]/_trainNum <<" estimated lsd: "<<_gradient[f]<<endl;
+            	lsd_grad[f]+= gradient;
 
-    //         //the compute sgd
+                lsd_norm += pow(gradient, 2);
+            }
+
+            //the compute sgd
             
-    //         samid = rand()%(_trainNum);
+            samid = rand()%(_trainNum);
 
-    //         td = _train_data[samid];
-    //         cur_label = _train_label[samid][0];
-    //         thetax = dotproduct(td, _wv, 0, _dim)-cur_label;
+            td = _train_data[samid];
+            cur_label = _train_label[samid][0];
+            thetax = dotproduct(td, _wv, 0, _dim)-cur_label;
 
-    //         for (int f=0; f<_dim; f++){
+            for (int f=0; f<_dim; f++){
 
-    //             sgd_norm+= pow(thetax*td[f], 2);
-    //             sgd_error += pow(truegrad[f]/_trainNum - thetax*td[f] , 2);
+                sgd_norm+= pow(thetax*td[f], 2);
+                // sgd_error += pow(truegrad[f]/_trainNum - thetax*td[f] , 2);
+                sgd_grad[f] += thetax*td[f];
 
-    //             // cout<< "True: "<< truegrad[f]/_trainNum <<" estimated sgd : "<<_gradient[f]<<endl;
-    //         }  
-    //         avg_sgd += sqrt(sgd_norm);
-    //         avg_lsd += sqrt(lsd_norm);            
+                // cout<< "True: "<< truegrad[f]/_trainNum <<" estimated sgd : "<<_gradient[f]<<endl;
+            }  
+            avg_sgd += sqrt(sgd_norm);
+            avg_lsd += sqrt(lsd_norm);            
 
-    //     }
+        }
                 
-    //             // for (int f=0; f<_dim; f++){
-    //             //     lsd_error += pow(truegrad[f]/_trainNum -lsd_grad[f]/(sizz*(batch+1)) , 2);
-    //             //     sgd_error += pow(truegrad[f]/_trainNum -sgd_grad[f]/(sizz*(batch+1)) , 2);
-    //             // }
+                for (int f=0; f<_dim; f++){
+                    lsd_error += pow(truegrad[f]/_trainNum -lsd_grad[f]/(sizz*(batch+1)) , 2);
+                    sgd_error += pow(truegrad[f]/_trainNum -sgd_grad[f]/(sizz*(batch+1)) , 2);
+                }
        
-    //     myfile<< _K<< " "<< iter <<" "<< train<< " "<< batch << " "<< lsd_error/(sizz*(batch+1)) << " "<< sgd_error/(sizz*(batch+1)) <<" "<< avg_lsd/(sizz*(batch+1))<< " "<<avg_sgd/(sizz*(batch+1)) <<" "<<variance <<endl;
+        myfile<< _K<< " "<< iter <<" "<< train<< " "<< batch << " "<< lsd_error/(sizz*(batch+1)) << " "<< sgd_error/(sizz*(batch+1)) <<" "<< avg_lsd/(sizz*(batch+1))<< " "<<avg_sgd/(sizz*(batch+1)) <<endl;
 
-    // }
+    }
 }
 
 
@@ -389,7 +392,7 @@ int Sgd::LSDUpdate(int ada)
 	    for (int i = 0; i < _trainNum; i++) {
 
 
-	    	// if ((cur_iter%2==0) & (i==10)){
+	    	// if ((cur_iter%5==0) & (i%(_trainNum/4)==0)){
 	    	// 	freeze(srp, cur_iter, i);
 	    	// }
 
