@@ -17,11 +17,11 @@ def plot(inputfile1):
 	epoch = set(data[:, 3])
 
 
-	for i in range(0, 1):
+	for i in range(0, len(dic)):
 		cur = list(dic)[i]
 
 		iters1 = data[data[:, 0]==cur,:]
-		iters1 = iters1[iters1[:, 1]==0,:]
+		# iters1 = iters1[iters1[:, 1]==0,:]
 		lsderror = []
 		sgderror = []
 		avg_grad_norm = []
@@ -49,7 +49,7 @@ def plot(inputfile1):
 		plt.plot(list(epoch), lsderror, linestyle=":", color=color[i], label='LSD K='+ str(cur))
 		plt.plot(list(epoch), sgderror, color=color[i],label='SGD K='+ str(cur))
 
-	# plt.yscale('log')
+	plt.yscale('log')
 	legend = plt.legend(loc='upper right', shadow=True)
 	# plt.ylim(0, 10e2)
 	# plt.xlim(0, 10000)
@@ -60,7 +60,7 @@ def plot(inputfile1):
 
 # plot("blog_estimate")
 # plot("slice_estimation")
-plot("gradient")
+plot("test_error")
 # a = np.array((np.zeros(5),np.zeros(5)))
 # b = np.array((np.ones(5), np.ones(5), np.ones(5)))
 # print a

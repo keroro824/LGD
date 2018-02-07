@@ -17,7 +17,7 @@ def plot(inputfile1, inputfile2, train=True):
 
 	dic = set(data[:, 0])
 
-	for i in range(0, len(dic)-2):
+	for i in range(0, len(dic)):
 		cur = list(dic)[i]
 		iters1 = data[data[:, 0]==cur,2]
 		train_error = data[data[:, 0]==cur,3]
@@ -36,13 +36,13 @@ def plot(inputfile1, inputfile2, train=True):
 		plt.plot(iters2, train_error2, label='plain SGD training error')
 	else:
 		plt.plot(iters2, test_error2, label='plain SGD testing error')
-	# plt.yscale('symlog')
+	# plt.yscale('log')
 	legend = plt.legend(loc='upper right', shadow=True)
 	# plt.ylim(0, 10e2)
-	plt.xlim(0, 20000)
+	# plt.xlim(0, 20000)
 	plt.ylabel('error')
 	plt.xlabel('time (ms)')
 	# plt.xlabel('epoch')
 	plt.show()
 
-plot("UJI_lsd_ada", "UJI_sgd_ada",True)
+plot("year_lsd_ada", "year_sgd_ada",True)

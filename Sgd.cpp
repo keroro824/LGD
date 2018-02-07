@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <time.h>
 #include <cmath>
+#include <math.h>
 #include <fstream>
 #include "LSH.h"
 #include "SignedRandomProjection.h"
@@ -230,8 +231,7 @@ int Sgd::SGDUpdate(int ada)
 void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
 	ofstream myfile("gradient_log",  ios::out | ios::app);
     double* truegrad = new double[_dim];
-    double* sgd_grad = new double[_dim];
-    double* lsd_grad = new double[_dim];
+
     double* grad = new double[_trainNum];
     int sizz = 5;
 
@@ -252,9 +252,9 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
         }
         grad[n] = cur_norm;
     }
-    // for (int f=0; f<_dim; f++){
-    //     true_gradient_norm+= truegrad[f]*truegrad[f];
-    // }
+    for (int f=0; f<_dim; f++){
+        true_gradient_norm+= truegrad[f]*truegrad[f];
+    }
 
     // double variance = 0.0;
     // for (int n=0; n<_trainNum; n++){
@@ -269,18 +269,20 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
         normwv+=_wv[m]*_wv[m];
     }
 
-    for (int batch=0; batch< 50; batch++){
+    for (int batch=0; batch< 200; batch++){
 
         double avg_lsd = 0.0;
         double avg_sgd = 0.0;
+        double* sgd_grad = new double[_dim];
+    	double* lsd_grad = new double[_dim];
 
         // cout<<" truegrad "<<endl;
 
-        int** sample_batch = new int *[3];
-        for( int bit = 0; bit < 3; bit++ ) {
-            sample_batch[bit] = new int[sizz*(batch+1)];
-        }
-        _Algo->sampleBatch(_wv, srp,  sizz*(batch+1), sample_batch, 1);
+        // int** sample_batch = new int *[3];
+        // for( int bit = 0; bit < 3; bit++ ) {
+        //     sample_batch[bit] = new int[sizz*(batch+1)];
+        // }
+        // _Algo->sampleBatch(_wv, srp,  sizz*(batch+1), sample_batch, 1);
 
         double sgd_error = 0.0;
         double lsd_error = 0.0;
@@ -288,19 +290,19 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
         // cout<<"batch "<< batch<<endl;
 
         for (int sam =0; sam< sizz*(batch+1); sam++){
-            // int* sample_batch;
-            // sample_batch = _Algo->sample(_wv, srp,1);
+            int* sample_batch;
+            sample_batch = _Algo->sample(_wv, srp,1);
 
             double lsd_norm =0;
             double sgd_norm =0;
 
-            int samid = sample_batch[0][sam];
-            int samset = sample_batch[1][sam];
-            int samtable = sample_batch[2][sam];
+            // int samid = sample_batch[0][sam];
+            // int samset = sample_batch[1][sam];
+            // int samtable = sample_batch[2][sam];
 
-            // int samid = sample_batch[0];
-            // int samset = sample_batch[1];
-            // int samtable = sample_batch[2];
+            int samid = sample_batch[0];
+            int samset = sample_batch[1];
+            int samtable = sample_batch[2];
 
 
             // cout<< "sample id: " <<samid <<"samset: "<< samset<< "samtable: "<<samtable<<endl;
@@ -349,12 +351,12 @@ void Sgd::freeze(SignedRandomProjection *srp, int iter, int train){
 
         }
                 
-                for (int f=0; f<_dim; f++){
-                    lsd_error += pow(truegrad[f]/_trainNum -lsd_grad[f]/(sizz*(batch+1)) , 2);
-                    sgd_error += pow(truegrad[f]/_trainNum -sgd_grad[f]/(sizz*(batch+1)) , 2);
-                }
+            for (int f=0; f<_dim; f++){
+                lsd_error += pow(truegrad[f]/_trainNum -lsd_grad[f]/(sizz*(batch+1)) , 2);
+                sgd_error += pow(truegrad[f]/_trainNum -sgd_grad[f]/(sizz*(batch+1)) , 2);
+            }
        
-        myfile<< _K<< " "<< iter <<" "<< train<< " "<< batch << " "<< lsd_error/(sizz*(batch+1)) << " "<< sgd_error/(sizz*(batch+1)) <<" "<< avg_lsd/(sizz*(batch+1))<< " "<<avg_sgd/(sizz*(batch+1)) <<endl;
+        myfile<< _K<< " "<< iter <<" "<< train<< " "<< batch << " "<< lsd_error << " "<< sgd_error <<" "<< avg_lsd/(sizz*(batch+1))<< " "<<avg_sgd/(sizz*(batch+1)) <<endl;
 
     }
 }
@@ -393,8 +395,10 @@ int Sgd::LSDUpdate(int ada)
 
 
 	    	// if ((cur_iter%5==0) & (i%(_trainNum/4)==0)){
-	    	// 	freeze(srp, cur_iter, i);
-	    	// }
+	    	if ((cur_iter==10) & (i==_trainNum/2)){
+	    		freeze(srp, cur_iter, i);
+	    	}
+	    	
 
 	    	//query data out
 			int* sample = _Algo->sample(_wv, srp, 1);
@@ -417,9 +421,10 @@ int Sgd::LSDUpdate(int ada)
             double normwv =0.0;
             for (int m=0; m<_dim; m++)
             {
-                normwv+=_wv[m]*_wv[m];
-                cp_comp+=_table_data[sampleid][m]*_wv[m];
-                tmp+= td[m]*_wv[m];
+            	double th = _wv[m];
+                normwv+= th*th;
+                cp_comp+=_table_data[sampleid][m]*th;
+                tmp+= td[m]*th;
             }
             tmp -= cur_label;
             cp_comp -= _table_data[sampleid][_dim];
@@ -428,6 +433,15 @@ int Sgd::LSDUpdate(int ada)
             double cp = 1- acos(cp_comp/sqrt(normwv))/3.141592653;
             double prob = (1 - pow((1 - pow(cp, _K)),table))*(1.0/subset);
 
+            // if ((cp!=cp) &(normwv==normwv)){
+            	// cout<< normwv <<" "<< prob<<" " << cp<<endl;
+            // 	double nor = 0.0;
+            // 	            for (int m=0; m<_dim+1; m++)
+            // {
+            //     nor+=_table_data[sampleid][m]*_table_data[sampleid][m];
+            // }
+            // cout<< nor<<endl;
+            // }
 
 	    	for (int j = 0; j < _dim; j++) {
 
