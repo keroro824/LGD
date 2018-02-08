@@ -35,25 +35,25 @@ def plot(inputfile1):
 			avg_sgd = iters1[iters1[:, 3]==e, 5]
 			lsd_norm = iters1[iters1[:, 3]==e, 6]
 			sgd_norm = iters1[iters1[:, 3]==e, 7]
-			# true_norm = iters1[iters1[:, 3]==e, 8]
+			true_norm = iters1[iters1[:, 3]==e, 8]
 
 			lsderror.append(np.average(avg_lsd))
 			sgderror.append(np.average(avg_sgd))
 			avg_lsd_norm.append(np.average(lsd_norm))
 			avg_grad_norm.append(np.average(sgd_norm))
-			# avg_true_norm.append(np.average(true_norm))
+			avg_true_norm.append(np.average(true_norm))
 
-		# plt.plot(list(epoch), avg_lsd_norm, linestyle=":", color=color[i], label='lsd norm epoch='+str(cur))
-		# plt.plot(list(epoch), avg_grad_norm, linestyle="-", color=color[i], label='sgd norm epoch=' +str(cur))
-		# plt.plot(list(epoch), avg_true_norm, linestyle="-.", color=color[i], label='true norm')
-		plt.plot(list(epoch), lsderror, linestyle=":", color=color[i], label='LSD K='+ str(cur))
-		plt.plot(list(epoch), sgderror, color=color[i],label='SGD K='+ str(cur))
+		plt.plot(list(epoch), avg_lsd_norm, linestyle=":", color=color[i], label='lsd norm epoch='+str(cur))
+		plt.plot(list(epoch), avg_grad_norm, linestyle="-", color=color[i+1], label='sgd norm epoch=' +str(cur))
+		# plt.plot(list(epoch), avg_true_norm, linestyle="-.", color=color[i+2], label='true norm')
+		# plt.plot(list(epoch), lsderror, linestyle=":", color=color[i], label='LSD K='+ str(cur))
+		# plt.plot(list(epoch), sgderror, color=color[i+1],label='SGD K='+ str(cur))
 
-	plt.yscale('log')
+	# plt.yscale('log')
 	legend = plt.legend(loc='upper right', shadow=True)
 	# plt.ylim(0, 10e2)
-	# plt.xlim(0, 10000)
-	plt.ylabel('norm')
+	# plt.xlim(0, 200)
+	plt.ylabel('Norm')
 	# plt.xlabel('time (ms)')
 	plt.xlabel('samples')
 	plt.show()
